@@ -1,0 +1,44 @@
+- name: epics-base
+  hosts: all
+  become: true
+  vars:
+    base_nsls2_enable_prod: 'true'
+    base_nsls2_enable_testing: 'false'
+
+  tasks:
+    - name: Add NSLS-II repos
+      ansible.builtin.yum_repository:
+        name: nsls2
+        file: nsls2-local
+        description: NSLS-II YUM repo
+        baseurl: 'https://www-dev.nsls2.bnl.gov/nsls2/rhel/$releasever/$basearch/'
+        gpgkey: 'https://www-dev.nsls2.bnl.gov/nsls2/NSLS2_GPG_KEY.asc'
+        gpgcheck: true
+        enabled: '{{ base_nsls2_enable_prod }}'
+      become: true
+
+    - name: Add NSLS-II testing repos
+      ansible.builtin.yum_repository:
+        name: nsls2-testing
+        file: nsls2-local
+        description: NSLS-II YUM testing repo
+        baseurl: >-
+          https://www-dev.nsls2.bnl.gov/nsls2/rhel/testing/$releasever/$basearch/
+        gpgkey: 'https://www-dev.nsls2.bnl.gov/nsls2/NSLS2_GPG_KEY.asc'
+        gpgcheck: true
+        enabled: '{{ base_nsls2_enable_testing }}'
+      become: true
+
+    - name: Set yum or dnf config file
+      ansible.builtin.set_fact:
+        _yum_config_file: |-
+          {{ '/etc/dnf/dnf.conf' if
+             ( ansible_distribution_major_version | int ) >= 8
+             else '/etc/yum.conf'
+          }}
+
+    # Install epics-bundle
+    - name: Install the latest version of epics bundle
+      yum:
+        name: epics-bundle
+        state: present

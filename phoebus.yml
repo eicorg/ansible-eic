@@ -1,0 +1,15 @@
+---
+- hosts: all
+  roles:
+    - role: '/opt/ansible/ansible-epics-tools/roles/epics_tools_libs_jvm'
+    - role: '/opt/ansible/ansible-epics-tools/roles/cs_studio_phoebus'
+  vars:    
+    epics_services_account: eicuser
+    beamline_name: "eic"
+    beamline_id: "00"
+    phoebus_pref: "/opt/epics-tools/config/pref-4.6.ini"
+    cs_studio_preferences:
+      basedir: /opt/epics-tools/preferences
+      configdir: /opt/epics-tools/configuration
+      user: eicuser
+

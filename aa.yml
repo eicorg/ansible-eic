@@ -1,0 +1,15 @@
+---
+- hosts: all
+  roles:
+    - role: '/opt/ansible/ansible-epics-tools/roles/epics_tools_libs_jvm'
+    - role: '/opt/ansible/ansible-epics-tools/roles/epics_tools_services_aa'
+  vars:
+    epics_services_account: epics-services
+    jdbc_root_user: "epics7@training-mySQL"
+    beamline_name: "training"
+    beamline_id: "00"
+    aa_java_opts_engine: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"
+    aa_java_opts_retrieval: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"
+    aa_java_opts_etl: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx512M -Xms256M -ea"
+    aa_java_opts_mgmt: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx512M -Xms256M -ea"
+
