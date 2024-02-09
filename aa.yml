@@ -1,8 +1,8 @@
 ---
 - hosts: all
   roles:
-    - role: '/opt/ansible/ansible-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-epics-tools/roles/epics_tools_services_aa'
+    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
+    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_aa'
   vars:
     epics_services_account: epics-services
     jdbc_root_user: "epics7@training-mySQL"
