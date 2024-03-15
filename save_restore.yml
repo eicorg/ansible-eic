@@ -7,7 +7,7 @@
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_save_restore'
   vars:    
     epics_services_account: eicuser
+    phoebus_owner: eicuser
+
     beamline_name: "eic"
     beamline_id: "00"
-    
-
