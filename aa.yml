@@ -4,10 +4,10 @@
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_aa'
   vars:
-    epics_services_account: epics-services
+    epics_services_account: eicuser
     aa_mysql_server: "demo02.eic.bnl.gov"
     jdbc_root_user: "eic@Mysql57"
-    beamline_name: "training"
+    beamline_name: "eic"
     beamline_id: "00"
     aa_java_opts_engine: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"
     aa_java_opts_retrieval: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"

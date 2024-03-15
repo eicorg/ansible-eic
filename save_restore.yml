@@ -4,8 +4,8 @@
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_save_restore'
   vars:    
-    epics_services_account: epics-services
-    beamline_name: "training"
+    epics_services_account: eicuser
+    beamline_name: "eic"
     beamline_id: "00"
     
 
