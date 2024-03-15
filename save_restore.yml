@@ -1,6 +1,8 @@
 ---
 - hosts: all
   roles:
+    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
+    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_elastic'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_save_restore'
   vars:    
