@@ -42,3 +42,10 @@
       yum:
         name: epics-bundle
         state: present
+    # Install epics-bundle
+
+    - name: Install the latest version of manage-iocs bundle
+      yum:
+        name: manage-iocs
+        state: present
+
