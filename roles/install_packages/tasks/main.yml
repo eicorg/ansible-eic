@@ -1,0 +1,7 @@
+---
+
+- name: Install specified yum packages
+  yum:
+    name: "{{ item.name }}{{ '-'+item.version if item.version is defined else '' }}"
+    state: present
+  loop: "{{ packages }}"
