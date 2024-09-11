@@ -4,3 +4,4 @@ packages:
   - name: git
   - name: curl
     version: 7.29.0
+  - name: rpcbind
