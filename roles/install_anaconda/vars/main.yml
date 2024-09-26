@@ -1,0 +1,7 @@
+---
+
+distributions:
+  - anaconda_3.11.5
+
+install_base: /opt
+

@@ -1,0 +1,6 @@
+---
+- name: Install Anaconda 3.11
+  become: true
+  hosts: anaconda
+  roles:
+    - install_anaconda

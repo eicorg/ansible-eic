@@ -1,0 +1,14 @@
+---
+- name: Unpack Anaconda Distributions
+  unarchive:
+    src: "{{ item }}.tar.gz"
+    state: present
+    copy: true
+    create: true
+    dest: "{{ install_base }}/{{ item  }}"
+  loop: "{{ distributions }}"
+
+- name: Unpack Conda
+  command:
+    cmd: "{{ install_base }}/{{ item }}/bin/conda-unpack"
+  loop: "{{ distributions }}"
