@@ -1,0 +1,20 @@
+---
+- name: Create Anaconda Directories
+  file:
+    path: "{{install_base}}/{{item}}"
+    state: directory
+    mode: '0755'
+  loop: "{{ distributions }}"
+
+- name: Unpack Anaconda Distributions
+  unarchive:
+    src: "{{ item }}.tar.gz"
+    dest: "{{ install_base }}/{{ item  }}"
+    extra_opts: ["--ignore-command-error"]
+  loop: "{{ distributions }}"
+  ignore_errors: true
+
+# - name: Unpack Conda
+#   command:
+#     cmd: "{{ install_base }}/{{ item }}/bin/conda-unpack"
+#   loop: "{{ distributions }}"

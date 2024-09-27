@@ -1,0 +1,27 @@
+---
+
+- name: Create Micromamba Directory
+  file:
+    path: "/usr/local/bin"
+    state: directory
+    mode: '0755'
+
+- name: Download Micromamba
+  unarchive:
+    src: "{{ micromamba_url }}"
+    dest: /usr/local
+    remote_src: yes
+    creates: "/usr/local/bin/micromamba"
+    include: ["bin/micromamba"]
+
+- name: Copy environment files
+  copy:
+    src: "{{ item }}.yaml"
+    dest: "/tmp/{{ item }}.yaml"
+  loop: "{{ distributions }}"
+
+- name: Generate Anaconda Distributions
+  command:
+    cmd: "/usr/local/bin/micromamba env create -f /tmp/{{ item }}.yaml -p {{ install_base }}/{{ item }}"
+    creates: "{{ install_base }}/{{ item }}"
+  loop: "{{ distributions }}"
