@@ -5,3 +5,6 @@
 
 - name: Install Anaconda from Archive
   import_tasks: install_archive.yml
+
+- name: Install Pip Configuration
+  import_tasks: configure_pip.yml

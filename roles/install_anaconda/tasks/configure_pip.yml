@@ -1,0 +1,5 @@
+---
+- name: Copy pip.conf
+  copy:
+    src: "pip.conf"
+    dest: "/etc/pip.conf"
