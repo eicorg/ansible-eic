@@ -1,0 +1,61 @@
+---
+- name: Configure SELinux for NFS SSH access
+  hosts: all
+  become: yes
+  vars:
+    mount_point: "/eic/users"
+
+  tasks:
+    - name: Install required packages
+      package:
+        name: 
+          - policycoreutils-python-utils
+          - policycoreutils
+        state: present
+
+    - name: Configure SELinux booleans
+      seboolean:
+        name: "{{ item }}"
+        state: yes
+        persistent: yes
+      loop:
+        - use_nfs_home_dirs
+        - ssh_chroot_rw_homedirs
+
+    - name: Set SELinux context for NFS mount point
+      sefcontext:
+        target: "{{ mount_point }}(/.*)?"
+        setype: user_home_dir_t
+        state: present
+
+    - name: Set specific context for .ssh directories
+      sefcontext:
+        target: "{{ mount_point }}/.*/.ssh(/.*)?"
+        setype: ssh_home_t
+        state: present
+
+    - name: Apply new SELinux contexts
+      command: restorecon -R -v {{ mount_point }}
+
+    - name: Create custom SELinux policy for SSH NFS access
+      copy:
+        dest: /tmp/ssh_nfs_access.te
+        content: |
+          module ssh_nfs_access 1.0;
+          
+          require {
+            type sshd_t;
+            type nfs_t;
+            class file { read open };
+          }
+          
+          allow sshd_t nfs_t:file { read open };
+
+    - name: Build and load custom SELinux policy
+      shell: |
+        cd /tmp
+        checkmodule -M -m -o ssh_nfs_access.mod ssh_nfs_access.te
+        semodule_package -o ssh_nfs_access.pp -m ssh_nfs_access.mod
+        semodule -i ssh_nfs_access.pp
+      args:
+        creates: /etc/selinux/targeted/active/modules/400/ssh_nfs_access

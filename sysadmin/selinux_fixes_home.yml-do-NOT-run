@@ -1,0 +1,30 @@
+---
+- name: Configure SELinux for NFS home directories
+  hosts: all
+  become: yes
+  vars:
+    mount_point: "/eic/users"
+
+  tasks:
+    - name: Install policycoreutils-python-utils
+      package:
+        name: policycoreutils-python-utils
+        state: present
+
+    - name: Configure SELinux booleans for NFS homes
+      seboolean:
+        name: "{{ item }}"
+        state: yes
+        persistent: yes
+      loop:
+        - use_nfs_home_dirs
+        - ssh_chroot_rw_homedirs
+
+    - name: Set SELinux context for NFS mount
+      sefcontext:
+        target: "{{ mount_point }}(/.*)?"
+        setype: public_content_rw_t
+        state: present
+
+    - name: Apply new SELinux context
+      command: restorecon -R -v {{ mount_point }}

@@ -7,8 +7,8 @@
     epics_services_account: eicuser
     beamline_name: "eic"
     beamline_id: "00"
-    phoebus_pref: "/opt/epics-tools/config/pref-4.6.ini"
-    phoebus_owner: eicuser
+    phoebus_pref: "/opt/eic-phoebus-resources/preferences/pref.ini"
+    phoebus_owner: "eicuser"
     cs_studio_preferences:
       basedir: /opt/epics-tools/preferences
       configdir: /opt/epics-tools/configuration

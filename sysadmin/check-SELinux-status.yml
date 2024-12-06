@@ -1,0 +1,23 @@
+---
+- name: Check SELinux Status Across Systems
+  hosts: all
+  become: true
+  tasks:
+    - name: Get current SELinux status
+      command: getenforce
+      register: current_mode
+      changed_when: false
+
+    - name: Get configured SELinux status from config file
+      command: grep "^SELINUX=" /etc/selinux/config
+      register: configured_mode
+      changed_when: false
+
+    - name: Display SELinux status for each host
+      debug:
+        msg: |
+          ------------------------------------------------
+          Host: {{ inventory_hostname }}
+          Current SELinux Mode: {{ current_mode.stdout }}
+          Configured in /etc/selinux/config: {{ configured_mode.stdout | regex_replace('^SELINUX=','') }}
+          ------------------------------------------------

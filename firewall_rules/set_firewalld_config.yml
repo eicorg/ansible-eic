@@ -1,0 +1,80 @@
+---
+- name: Configure Simple FirewallD Rules
+  hosts: all
+  become: yes
+
+  vars:
+    server_pool_networks:
+      - 130.199.96.0/23
+      - 130.199.100.0/23
+    allowed_networks:
+      - 130.199.219.0/24
+      - 130.199.104.0/23
+      - 130.199.106.0/23
+      - 130.199.108.0/22
+      - 130.199.90.0/23
+
+  tasks:
+    - name: Ensure FirewallD is installed
+      dnf:
+        name: firewalld
+        state: present
+
+    - name: Ensure FirewallD is running and enabled
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Create custom zone 'server_pool'
+      firewalld:
+        zone: server_pool
+        state: present
+        permanent: yes
+
+    - name: Set 'server_pool' as default zone
+      firewalld:
+        default_zone: server_pool
+        state: enabled
+        permanent: yes
+
+    - name: Add server pool networks to 'server_pool' zone
+      firewalld:
+        zone: server_pool
+        source: "{{ item }}"
+        state: enabled
+        permanent: yes
+      loop: "{{ server_pool_networks }}"
+
+    - name: Allow traffic from specified networks
+      firewalld:
+        zone: server_pool
+        source: "{{ item }}"
+        state: enabled
+        permanent: yes
+      loop: "{{ allowed_networks }}"
+
+    - name: Allow SSH service
+      firewalld:
+        zone: server_pool
+        service: ssh
+        state: enabled
+        permanent: yes
+
+    - name: Allow all traffic between hosts in the 'server_pool' zone
+      firewalld:
+        zone: server_pool
+        rich_rule: 'rule family="ipv4" source address="{{ item }}" accept'
+        state: enabled
+        permanent: yes
+      loop: "{{ server_pool_networks + allowed_networks }}"
+
+    - name: Reload FirewallD
+      command: firewall-cmd --reload
+
+    - name: Make runtime configuration permanent
+      command: firewall-cmd --runtime-to-permanent
+
+    - name: Display applied FirewallD rules
+      debug:
+        msg: "FirewallD rules have been applied. Use get_firewalld_facts.yml to view the current configuration."

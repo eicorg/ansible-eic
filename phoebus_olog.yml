@@ -4,7 +4,7 @@
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_elastic'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_mongo'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
+#    - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_phoebus_olog'
   vars:    
     epics_services_account: eicuser
@@ -12,3 +12,6 @@
 
     beamline_name: "eic"
     beamline_id: "00"
+    
+    mongod_user: mongod
+    mongod_group: mongod

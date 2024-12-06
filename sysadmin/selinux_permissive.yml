@@ -1,0 +1,30 @@
+---
+- name: Configure SELinux to Permissive Mode
+  hosts: all
+  become: true
+  tasks:
+    - name: Check current SELinux status
+      command: getenforce
+      register: selinux_status
+      changed_when: false
+
+    - name: Set SELinux to permissive mode immediately
+      command: setenforce 0
+      when: selinux_status.stdout != "Permissive"
+      ignore_errors: true
+
+    - name: Configure SELinux to permissive mode persistently
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX=permissive'
+      notify: reboot system
+
+  handlers:
+    - name: reboot system
+      reboot:
+        msg: "Rebooting system to apply SELinux changes"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
