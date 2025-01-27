@@ -2,6 +2,7 @@
 
 cs_studio_resources_config:
   repo: "https://code.nsls2.bnl.gov/cs-studio-nsls2/preferences.git"
+  version: "main"
   basedir: /opt/css/preferences
   configdir: /opt/css/configuration
   user: csstudio

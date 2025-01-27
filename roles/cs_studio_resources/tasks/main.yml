@@ -18,7 +18,7 @@
   ansible.builtin.git:
     repo: "{{ cs_studio_resources_config.repo }}"
     dest: "{{ cs_studio_resources_config.basedir }}"
-    version: "master"
+    version: "{{ cs_studio_resources_config.version }}"
     force: true
 
 - name: Create folder for cs-studio perspectives

@@ -10,7 +10,7 @@
     beamline_id: "00"
     phoebus_pref: "/opt/eic-phoebus-resources/preferences/pref.ini"
     phoebus_owner: "eicuser"
-    cs_studio_preferences:
+    cs_studio_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
       basedir: /opt/eic-phoebus-resources/preferences
       configdir: /opt/eic-phoebus-resources/configuration
