@@ -3,7 +3,7 @@
   roles:
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
-    - role: '/opt/ansible/ansible-eic/roles/cs_studio_phoebus'
+    - role: '/opt/ansible/ansible-eic/roles/cs_studio_resources'
   vars:
     epics_services_account: eicuser
     beamline_name: "eic"
