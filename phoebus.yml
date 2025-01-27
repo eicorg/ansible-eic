@@ -12,6 +12,7 @@
     phoebus_owner: "eicuser"
     cs_studio_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
+      version: "main"
       basedir: /opt/eic-phoebus-resources/preferences
       configdir: /opt/eic-phoebus-resources/configuration
       user: eicuser
