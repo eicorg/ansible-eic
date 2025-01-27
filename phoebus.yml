@@ -3,14 +3,15 @@
   roles:
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
     - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
-  vars:    
+    - role: '/opt/ansible/ansible-eic/roles/cs_studio_phoebus'
+  vars:
     epics_services_account: eicuser
     beamline_name: "eic"
     beamline_id: "00"
     phoebus_pref: "/opt/eic-phoebus-resources/preferences/pref.ini"
     phoebus_owner: "eicuser"
     cs_studio_preferences:
-      basedir: /opt/epics-tools/preferences
-      configdir: /opt/epics-tools/configuration
+      repo: "https://github.com/eicorg/eic-phoebus-resources.git"
+      basedir: /opt/eic-phoebus-resources/preferences
+      configdir: /opt/eic-phoebus-resources/configuration
       user: eicuser
-
