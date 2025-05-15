@@ -8,8 +8,8 @@
     epics_services_account: eicuser
     beamline_name: "eic"
     beamline_id: "00"
-    phoebus_pref: "/opt/eic-phoebus-resources/preferences/preferences/pref.ini"
-    phoebus_owner: "eicuser"
+    cs_studio_phoebus_pref: "/opt/eic-phoebus-resources/preferences/preferences/pref.ini"
+    cs_studio_phoebus_owner: "eicuser"
     cs_studio_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
       version: "main"
