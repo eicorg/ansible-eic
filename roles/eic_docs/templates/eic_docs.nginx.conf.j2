@@ -1,0 +1,17 @@
+server {
+    listen {{ eic_docs_nginx_port }};
+    server_name {{ eic_docs_nginx_server_name }};
+
+    root {{ eic_docs_nginx_root }};
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Cache static assets
+    location ~* \.(css|js|png|jpg|gif|ico|woff|woff2)$ {
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+}

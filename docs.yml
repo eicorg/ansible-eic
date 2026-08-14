@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: eic_docs
+  vars:
+    eic_docs_version: master
+    eic_docs_nginx_port: 80
+    # Override eic_docs_nginx_server_name with the hostname if needed:
+    # eic_docs_nginx_server_name: docs.eic.example.org

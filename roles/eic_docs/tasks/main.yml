@@ -1,0 +1,79 @@
+---
+- name: Install nginx and Python build dependencies
+  become: true
+  ansible.builtin.package:
+    name:
+      - nginx
+      - python3
+      - python3-pip
+      - python3-venv
+      - git
+    state: present
+
+- name: Ensure docs directories exist
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ eic_docs_account }}"
+    group: "{{ eic_docs_account }}"
+    mode: "0755"
+  loop:
+    - /opt/eic-docs
+    - "{{ eic_docs_dest }}"
+    - "{{ eic_docs_build_dir }}"
+
+- name: Clone and/or update the docs repo
+  become: true
+  become_user: "{{ eic_docs_account }}"
+  ansible.builtin.git:
+    repo: "{{ eic_docs_repo }}"
+    dest: "{{ eic_docs_dest }}"
+    version: "{{ eic_docs_version }}"
+    force: true
+  register: eic_docs_repo_result
+
+- name: Create Python venv for Sphinx build
+  become: true
+  become_user: "{{ eic_docs_account }}"
+  ansible.builtin.command:
+    cmd: python3 -m venv /opt/eic-docs/venv
+    creates: /opt/eic-docs/venv/bin/activate
+
+- name: Install Sphinx and requirements into venv
+  become: true
+  become_user: "{{ eic_docs_account }}"
+  ansible.builtin.pip:
+    requirements: "{{ eic_docs_dest }}/configuration/requirements.txt"
+    virtualenv: /opt/eic-docs/venv
+    virtualenv_command: python3 -m venv
+
+- name: Build HTML docs with Sphinx
+  become: true
+  become_user: "{{ eic_docs_account }}"
+  ansible.builtin.command:
+    cmd: >-
+      /opt/eic-docs/venv/bin/sphinx-build
+      -b html
+      {{ eic_docs_dest }}
+      {{ eic_docs_build_dir }}
+  changed_when: true
+  when: eic_docs_repo_result.changed | bool
+
+- name: Install nginx configuration
+  become: true
+  ansible.builtin.template:
+    src: eic_docs.nginx.conf.j2
+    dest: /etc/nginx/conf.d/eic_docs.conf
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Reload nginx
+
+- name: Enable and start nginx
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: started
+    enabled: true
+    daemon_reload: true

@@ -1,0 +1,10 @@
+---
+eic_docs_repo: https://github.com/eicorg/docs.git
+eic_docs_version: master
+eic_docs_dest: /opt/eic-docs/src
+eic_docs_build_dir: /opt/eic-docs/html
+eic_docs_nginx_root: /opt/eic-docs/html
+eic_docs_nginx_port: 80
+eic_docs_nginx_server_name: "_"
+eic_docs_service_name: eic_docs
+eic_docs_account: eicuser
