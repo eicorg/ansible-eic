@@ -1,8 +1,6 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-  vars:
-    epics_services_account: eicuser
-        
+    - role: org.phoebus.phoebus_dependencies
 

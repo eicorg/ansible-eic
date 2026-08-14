@@ -1,11 +1,7 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_elastic'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_cf'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_recceiver'
-  vars:
-    epics_services_account: eicuser
-    beamline_name: "eic"
-    beamline_id: "00"
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_services_elasticsearch
+    - role: org.phoebus.phoebus_services_cf

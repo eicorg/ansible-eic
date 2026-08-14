@@ -1,18 +1,17 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
-    - role: '/opt/ansible/ansible-eic/roles/cs_studio_resources'
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_tools
+    - role: cs_studio_resources
   vars:
-    epics_services_account: eicuser
-    beamline_name: "eic"
-    beamline_id: "00"
-    cs_studio_phoebus_pref: "/opt/eic-phoebus-resources/preferences/preferences/pref.ini"
-    cs_studio_phoebus_owner: "eicuser"
+    phoebus_tools_owner: eicuser
+    phoebus_tools_install_launcher: true
+    phoebus_tools_install_preferences: false
     cs_studio_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
       version: "main"
-      basedir: /opt/eic-phoebus-resources/preferences
+      basedir: /opt/eic-phoebus-resources
       configdir: /opt/eic-phoebus-resources/configuration
       user: eicuser

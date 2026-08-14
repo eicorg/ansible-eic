@@ -1,16 +1,13 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_elastic'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_kafka'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_phoebus_alarm'
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_services_elasticsearch
+    - role: org.phoebus.phoebus_services_kafka
+    - role: org.phoebus.phoebus_tools
+    - role: org.phoebus.phoebus_services_phoebus_alarm
   vars:
-    epics_services_account: eicuser
-    phoebus_owner: eicuser
-
-    beamline_name: "eic"
-    beamline_id: "00"   
-    alarm_config: "EIC"
+    phoebus_tools_owner: eicuser
+    phoebus_services_phoebus_alarm_config: EIC
 

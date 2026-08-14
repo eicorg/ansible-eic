@@ -1,16 +1,13 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_aa'
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_services_aa
   vars:
-    epics_services_account: eicuser
     aa_mysql_server: "demo02.eic.bnl.gov"
-    jdbc_root_user: "eic@Mysql57"
-    beamline_name: "eic"
-    beamline_id: "00"
-    aa_java_opts_engine: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"
-    aa_java_opts_retrieval: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx1G -Xms256M -ea"
-    aa_java_opts_etl: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx512M -Xms256M -ea"
-    aa_java_opts_mgmt: "-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx512M -Xms256M -ea"
+    aa_java_opts_engine: "-XX:+UseG1GC -Xmx1G -Xms256M -ea"
+    aa_java_opts_retrieval: "-XX:+UseG1GC -Xmx1G -Xms256M -ea"
+    aa_java_opts_etl: "-XX:+UseG1GC -Xmx512M -Xms256M -ea"
+    aa_java_opts_mgmt: "-XX:+UseG1GC -Xmx512M -Xms256M -ea"
 

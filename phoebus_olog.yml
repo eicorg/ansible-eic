@@ -1,17 +1,11 @@
 ---
 - hosts: all
+  become: true
   roles:
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_libs_jvm'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_elastic'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_mongo'
-#    - role: '/opt/ansible/ansible-eic-epics-tools/roles/cs_studio_phoebus'
-    - role: '/opt/ansible/ansible-eic-epics-tools/roles/epics_tools_services_phoebus_olog'
-  vars:    
-    epics_services_account: eicuser
-    phoebus_owner: eicuser
-
-    beamline_name: "eic"
-    beamline_id: "00"
-    
-    mongod_user: mongod
-    mongod_group: mongod
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_services_elasticsearch
+    - role: org.phoebus.phoebus_services_mongodb
+    - role: org.phoebus.phoebus_tools
+    - role: org.phoebus.phoebus_services_phoebus_olog
+  vars:
+    phoebus_tools_owner: eicuser
