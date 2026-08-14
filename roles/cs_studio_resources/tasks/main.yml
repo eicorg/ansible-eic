@@ -21,14 +21,10 @@
     version: "{{ cs_studio_resources_config.version }}"
     force: true
 
-- name: Create folder for cs-studio perspectives
+- name: Set ownership on resources
   ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: '0777'
-    force: true
-  loop:
-    - "{{ cs_studio_resources_config.configdir }}"
-    - "{{ cs_studio_resources_config.configdir + '/perspectives' }}"
+    dest: "{{ cs_studio_resources_config.basedir }}"
+    owner: "{{ cs_studio_resources_config.user }}"
+    group: "{{ cs_studio_resources_config.user }}"
+    mode: "u=rwX,g=rX,o=rX"
+    recurse: true
