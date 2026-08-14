@@ -1,0 +1,6 @@
+---
+collections:
+  - name: org.phoebus
+    type: git
+    source: https://github.com/ControlSystemStudio/ansible-phoebus.git
+    version: main
