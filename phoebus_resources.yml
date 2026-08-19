@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: phoebus_resources
+  vars:
+    phoebus_resources_config:
+      repo: "https://github.com/eicorg/eic-phoebus-resources.git"
+      version: "main"
+      basedir: /opt/eic-phoebus-resources
+      configdir: /opt/eic-phoebus-resources/configuration
+      user: eicuser
