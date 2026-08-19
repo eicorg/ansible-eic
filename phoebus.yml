@@ -8,7 +8,8 @@
   vars:
     phoebus_tools_owner: eicuser
     phoebus_tools_install_launcher: true
-    phoebus_tools_install_preferences: false
+    phoebus_tools_install_preferences: true
+    phoebus_tools_preferences_file: "{{ phoebus_resources_config.basedir }}/preferences/pref.ini"
     phoebus_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
       version: "main"
