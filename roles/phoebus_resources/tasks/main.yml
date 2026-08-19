@@ -20,6 +20,7 @@
     dest: "{{ phoebus_resources_config.basedir }}"
     version: "{{ phoebus_resources_config.version }}"
     force: true
+    update: true
 
 - name: Set ownership on resources
   ansible.builtin.file:
