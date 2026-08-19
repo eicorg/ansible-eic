@@ -1,0 +1,30 @@
+---
+
+- name: Check for repo dir
+  ansible.builtin.stat:
+    path: "{{ phoebus_resources_config.basedir }}"
+  register: _stat
+
+- name: Recursively change permissions
+  ansible.builtin.file:
+    dest: "{{ phoebus_resources_config.basedir }}"
+    owner: root
+    group: root
+    mode: "u=rwX,g=rX,o=rX"
+    recurse: true
+  when: _stat.stat.exists
+
+- name: Clone and/or update the phoebus preferences repo
+  ansible.builtin.git:
+    repo: "{{ phoebus_resources_config.repo }}"
+    dest: "{{ phoebus_resources_config.basedir }}"
+    version: "{{ phoebus_resources_config.version }}"
+    force: true
+
+- name: Set ownership on resources
+  ansible.builtin.file:
+    dest: "{{ phoebus_resources_config.basedir }}"
+    owner: "{{ phoebus_resources_config.user }}"
+    group: "{{ phoebus_resources_config.user }}"
+    mode: "u=rwX,g=rX,o=rX"
+    recurse: true

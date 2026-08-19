@@ -1,6 +1,6 @@
 ---
 
-cs_studio_resources_config:
+phoebus_resources_config:
   repo: "https://github.com/eicorg/eic-phoebus-resources.git"
   version: "main"
   basedir: /opt/eic-phoebus-resources

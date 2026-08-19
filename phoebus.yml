@@ -4,12 +4,12 @@
   roles:
     - role: org.phoebus.phoebus_dependencies
     - role: org.phoebus.phoebus_tools
-    - role: cs_studio_resources
+    - role: phoebus_resources
   vars:
     phoebus_tools_owner: eicuser
     phoebus_tools_install_launcher: true
     phoebus_tools_install_preferences: false
-    cs_studio_resources_config:
+    phoebus_resources_config:
       repo: "https://github.com/eicorg/eic-phoebus-resources.git"
       version: "main"
       basedir: /opt/eic-phoebus-resources
