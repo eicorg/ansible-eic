@@ -5,4 +5,4 @@ phoebus_resources_config:
   version: "main"
   basedir: /opt/eic-phoebus-resources
   configdir: /opt/eic-phoebus-resources/configuration
-  user: csstudio
+  user: eicuser

@@ -6,6 +6,7 @@
     - role: org.phoebus.phoebus_tools
     - role: phoebus_resources
   vars:
+    phoebus_dependencies_account: eicuser
     phoebus_tools_owner: eicuser
     phoebus_tools_install_launcher: true
     phoebus_tools_install_preferences: true
