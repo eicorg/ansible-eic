@@ -1,51 +1,56 @@
-- name: epics-base
+---
+- name: Install EPICS base from source
   hosts: all
   become: true
   vars:
-    base_nsls2_enable_prod: 'true'
-    base_nsls2_enable_testing: 'false'
+    epics_base_version: "7.0.10"
+    epics_base_install_dir: "/opt/epics/base"
+    epics_base_download_url: "https://epics-controls.org/download/base/base-{{ epics_base_version }}.tar.gz"
+    epics_base_src_dir: "{{ epics_base_install_dir }}/base-{{ epics_base_version }}"
 
   tasks:
-    - name: Add NSLS-II repos
-      ansible.builtin.yum_repository:
-        name: nsls2
-        file: nsls2-local
-        description: NSLS-II YUM repo
-        baseurl: 'https://www-dev.nsls2.bnl.gov/nsls2/rhel/$releasever/$basearch/'
-        gpgkey: 'https://www-dev.nsls2.bnl.gov/nsls2/NSLS2_GPG_KEY.asc'
-        gpgcheck: true
-        enabled: '{{ base_nsls2_enable_prod }}'
-      become: true
-
-    - name: Add NSLS-II testing repos
-      ansible.builtin.yum_repository:
-        name: nsls2-testing
-        file: nsls2-local
-        description: NSLS-II YUM testing repo
-        baseurl: >-
-          https://www-dev.nsls2.bnl.gov/nsls2/rhel/testing/$releasever/$basearch/
-        gpgkey: 'https://www-dev.nsls2.bnl.gov/nsls2/NSLS2_GPG_KEY.asc'
-        gpgcheck: true
-        enabled: '{{ base_nsls2_enable_testing }}'
-      become: true
-
-    - name: Set yum or dnf config file
-      ansible.builtin.set_fact:
-        _yum_config_file: |-
-          {{ '/etc/dnf/dnf.conf' if
-             ( ansible_distribution_major_version | int ) >= 8
-             else '/etc/yum.conf'
-          }}
-
-    # Install epics-bundle
-    - name: Install the latest version of epics bundle
-      yum:
-        name: epics-bundle
+    - name: Install build dependencies
+      ansible.builtin.package:
+        name:
+          - gcc
+          - gcc-c++
+          - make
+          - readline-devel
+          - perl
         state: present
-    # Install epics-bundle
 
-    - name: Install the latest version of manage-iocs bundle
-      yum:
-        name: manage-iocs
-        state: present
+    - name: Create EPICS install directory
+      ansible.builtin.file:
+        path: "{{ epics_base_install_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download EPICS base tarball
+      ansible.builtin.get_url:
+        url: "{{ epics_base_download_url }}"
+        dest: "/tmp/base-{{ epics_base_version }}.tar.gz"
+        mode: "0644"
+
+    - name: Extract EPICS base tarball
+      ansible.builtin.unarchive:
+        src: "/tmp/base-{{ epics_base_version }}.tar.gz"
+        dest: "{{ epics_base_install_dir }}"
+        remote_src: true
+        creates: "{{ epics_base_src_dir }}"
+
+    - name: Build EPICS base
+      ansible.builtin.command:
+        cmd: make
+        chdir: "{{ epics_base_src_dir }}"
+        creates: "{{ epics_base_src_dir }}/bin"
+
+    - name: Install EPICS environment profile script
+      ansible.builtin.copy:
+        dest: /etc/profile.d/epics.sh
+        mode: "0644"
+        content: |
+          export EPICS_BASE={{ epics_base_src_dir }}
+          export EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)
+          export PATH=${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
+
 
