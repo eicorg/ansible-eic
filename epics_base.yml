@@ -1,0 +1,56 @@
+---
+- name: Install EPICS base from source
+  hosts: all
+  become: true
+  vars:
+    epics_base_version: "7.0.10"
+    epics_base_install_dir: "/opt/epics/base"
+    epics_base_download_url: "https://epics-controls.org/download/base/base-{{ epics_base_version }}.tar.gz"
+    epics_base_src_dir: "{{ epics_base_install_dir }}/base-{{ epics_base_version }}"
+
+  tasks:
+    - name: Install build dependencies
+      ansible.builtin.package:
+        name:
+          - gcc
+          - gcc-c++
+          - make
+          - readline-devel
+          - perl
+        state: present
+
+    - name: Create EPICS install directory
+      ansible.builtin.file:
+        path: "{{ epics_base_install_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download EPICS base tarball
+      ansible.builtin.get_url:
+        url: "{{ epics_base_download_url }}"
+        dest: "/tmp/base-{{ epics_base_version }}.tar.gz"
+        mode: "0644"
+
+    - name: Extract EPICS base tarball
+      ansible.builtin.unarchive:
+        src: "/tmp/base-{{ epics_base_version }}.tar.gz"
+        dest: "{{ epics_base_install_dir }}"
+        remote_src: true
+        creates: "{{ epics_base_src_dir }}"
+
+    - name: Build EPICS base
+      ansible.builtin.command:
+        cmd: make
+        chdir: "{{ epics_base_src_dir }}"
+        creates: "{{ epics_base_src_dir }}/bin"
+
+    - name: Install EPICS environment profile script
+      ansible.builtin.copy:
+        dest: /etc/profile.d/epics.sh
+        mode: "0644"
+        content: |
+          export EPICS_BASE={{ epics_base_src_dir }}
+          export EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)
+          export PATH=${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
+
+
