@@ -1,0 +1,6 @@
+---
+- name: Install EPICS from a bundle
+  hosts: all
+  become: true
+  roles:
+    - epics_bundle
