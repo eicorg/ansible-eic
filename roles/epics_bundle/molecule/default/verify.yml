@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Query installed EPICS bundle RPM
+      ansible.builtin.command: rpm -q epics-bundle
+      register: epics_bundle_rpm_query
+      changed_when: false
+
+    - name: Assert EPICS bundle RPM is installed
+      ansible.builtin.assert:
+        that:
+          - epics_bundle_rpm_query.rc == 0
