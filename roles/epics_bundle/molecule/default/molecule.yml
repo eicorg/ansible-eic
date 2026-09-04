@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: podman
+
+platforms:
+  - name: epics-bundle-instance
+    image: quay.io/almalinux/almalinux:9
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      epics-bundle-instance:
+        epics_bundle_cleanup: true
+
+verifier:
+  name: ansible
