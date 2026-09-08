@@ -6,19 +6,22 @@ Install EPICS from a prebuilt downloadable RPM instead of building from source.
 Example variables:
 
 ```yaml
-epics_bundle_url: https://github.com/eicorg/epics-rpm-config/releases/download/eic-7.0.10_1.0.0-2/epics-bundle-7.0.10_1.0.0-2.el9.x86_64.rpm
+epics_bundle_release_tag: eic-7.0.10_1.0.0-3
 ```
 
 Optional overrides:
 
 ```yaml
-epics_bundle_filename: epics-base.rpm
+# Force a specific URL instead of OS auto-selection:
+epics_bundle_url: https://github.com/eicorg/epics-rpm-config/releases/download/eic-7.0.10_1.0.0-3/epics-bundle-7.0.10_1.0.0-3.el9.x86_64.rpm
+
 epics_bundle_cleanup: true
 ```
 
 Notes:
 
-- The URL must point directly to a downloadable RPM file.
+- By default, the role builds the RPM URL from epics_bundle_release_tag and ansible_distribution_major_version (8/9/10).
+- Set epics_bundle_url only when you want to override OS auto-selection.
 - By default the role sets `epics_bundle_disable_gpg_check: true` because ad hoc build RPMs are often unsigned.
 
 Molecule test with Podman

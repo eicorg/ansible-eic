@@ -2,10 +2,28 @@
 - name: Validate EPICS bundle inputs
   ansible.builtin.assert:
     that:
-      - epics_bundle_url | length > 0
       - ansible_pkg_mgr in ['dnf', 'yum']
+      - ansible_distribution_major_version in ['8', '9', '10']
     fail_msg: >-
-      Set epics_bundle_url on a yum/dnf-managed host.
+      Run this role on Alma/RHEL 8, 9, or 10 with yum/dnf.
+
+- name: Resolve EPICS bundle URL for this host
+  ansible.builtin.set_fact:
+    epics_bundle_effective_url: >-
+      {{
+        epics_bundle_url
+        if (epics_bundle_url | default('') | length > 0)
+        else epics_bundle_release_base_url ~ '/' ~ epics_bundle_release_tag ~ '/epics-bundle-' ~
+             (epics_bundle_release_tag | regex_replace('^eic-', '')) ~ '.el' ~
+             ansible_distribution_major_version ~ '.x86_64.rpm'
+      }}
+
+- name: Validate EPICS bundle URL resolution
+  ansible.builtin.assert:
+    that:
+      - epics_bundle_effective_url | length > 0
+    fail_msg: >-
+      Could not resolve EPICS bundle URL.
 
 - name: Ensure EPICS bundle workspace exists
   ansible.builtin.file:
@@ -19,18 +37,11 @@
 
 - name: Resolve EPICS bundle filename
   ansible.builtin.set_fact:
-    epics_bundle_download_path: >-
-      {{
-        epics_bundle_work_dir ~ '/' ~ (
-          epics_bundle_filename
-          if (epics_bundle_filename | default('') | length > 0)
-          else (epics_bundle_url | regex_replace('^.*/', '') | regex_replace('\\?.*$', ''))
-        )
-      }}
+    epics_bundle_download_path: "{{ epics_bundle_work_dir }}/{{ epics_bundle_effective_url | regex_replace('^.*/', '') | regex_replace('\\?.*$', '') }}"
 
 - name: Download EPICS bundle
   ansible.builtin.get_url:
-    url: "{{ epics_bundle_url }}"
+    url: "{{ epics_bundle_effective_url }}"
     dest: "{{ epics_bundle_download_path }}"
     force: "{{ epics_bundle_force_download }}"
     timeout: "{{ epics_bundle_download_timeout }}"
