@@ -1,7 +1,7 @@
 ---
 # Defaults for NameOps service deployment
 
-deployment_name: "tst"
+deployment_name: "eic"
 epics_services_account: "eicuser"
 
 nameops_repo_url: "https://github.com/eicorg/NameOps.git"
