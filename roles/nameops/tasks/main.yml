@@ -1,0 +1,90 @@
+---
+- name: Ensure NameOps install directory exists
+  ansible.builtin.file:
+    path: "{{ nameops_install_dir }}"
+    state: directory
+    owner: "{{ epics_services_account }}"
+    group: "{{ epics_services_account }}"
+    recurse: true
+
+- name: Clone NameOps from GitHub
+  become: true
+  become_user: "{{ epics_services_account }}"
+  ansible.builtin.git:
+    repo: "{{ nameops_repo_url }}"
+    dest: "{{ nameops_source_dir }}"
+    version: "{{ nameops_repo_version }}"
+    force: true
+    update: true
+
+- name: Check required toolchain executables
+  ansible.builtin.stat:
+    path: "{{ item.path }}"
+  loop:
+    - path: "{{ nameops_java_home }}/bin/java"
+      name: "java"
+    - path: "{{ nameops_maven_home }}/bin/mvn"
+      name: "maven"
+  register: nameops_toolchain_bins
+
+- name: Assert required toolchain is available
+  ansible.builtin.assert:
+    that:
+      - (nameops_toolchain_bins.results | selectattr('stat.exists', 'equalto', true) | list | length) == 2
+    fail_msg: "Missing required toolchain on target host. Ensure org.phoebus.phoebus_dependencies installed JDK 25 and Maven under {{ nameops_java_home }} and {{ nameops_maven_home }}."
+
+- name: Build NameOps with Maven
+  become: true
+  become_user: "{{ epics_services_account }}"
+  ansible.builtin.command: mvn clean package -DskipTests
+  args:
+    chdir: "{{ nameops_source_dir }}"
+  environment:
+    JAVA_HOME: "{{ nameops_java_home }}"
+    MVN_HOME: "{{ nameops_maven_home }}"
+    PATH: "{{ nameops_java_home }}/bin:{{ nameops_maven_home }}/bin:{{ ansible_env.PATH }}"
+  changed_when: true
+
+- name: Find built NameOps jar
+  ansible.builtin.find:
+    paths: "{{ nameops_source_dir }}/target"
+    patterns: "nameops-*.jar"
+    file_type: file
+  register: nameops_jars
+
+- name: Select deployable NameOps jar
+  ansible.builtin.set_fact:
+    nameops_built_jar: "{{ ((nameops_jars.files | rejectattr('path', 'search', '\\.original$') | sort(attribute='mtime') | map(attribute='path') | list) | last) | default('') }}"
+
+- name: Assert deployable NameOps jar exists
+  ansible.builtin.assert:
+    that:
+      - nameops_built_jar | length > 0
+    fail_msg: "No deployable NameOps jar found under {{ nameops_source_dir }}/target"
+
+- name: Install NameOps runnable jar
+  become: true
+  ansible.builtin.copy:
+    src: "{{ nameops_built_jar }}"
+    dest: "{{ nameops_jar_dest }}"
+    owner: "{{ epics_services_account }}"
+    group: "{{ epics_services_account }}"
+    mode: "0755"
+    remote_src: true
+
+- name: Create NameOps systemd service unit
+  become: true
+  ansible.builtin.template:
+    src: nameops.service.j2
+    dest: "/etc/systemd/system/{{ nameops_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable and restart NameOps service
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ nameops_service_name }}"
+    enabled: true
+    state: restarted
+    daemon_reload: true
