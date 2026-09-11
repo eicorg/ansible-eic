@@ -1,0 +1,20 @@
+---
+# Defaults for NameOps service deployment
+
+deployment_name: "tst"
+epics_services_account: "eicuser"
+
+nameops_repo_url: "https://github.com/eicorg/NameOps.git"
+nameops_repo_version: "main"
+
+nameops_install_dir: "/opt/epics-tools/services/{{ deployment_name }}/nameops"
+nameops_source_dir: "{{ nameops_install_dir }}/nameops"
+nameops_jar_dest: "{{ nameops_install_dir }}/nameops.jar"
+nameops_service_name: "{{ deployment_name }}_nameops"
+
+# Toolchain is provided by org.phoebus.phoebus_dependencies.
+nameops_java_home: "{{ (phoebus_dependencies_root | default('/opt/epics-tools/lib')) + '/jvm/jdk-25' }}"
+nameops_maven_home: "{{ (phoebus_dependencies_root | default('/opt/epics-tools/lib')) + '/apache-maven-' + (phoebus_dependencies_maven_version | default('3.9.9')) }}"
+
+nameops_http_port: "8080"
+nameops_java_opts: "-Xms256m -Xmx1g"
