@@ -1,8 +1,0 @@
----
-- hosts: all
-  become: true
-  roles:
-    - role: org.phoebus.phoebus_dependencies
-    - role: nameops
-  vars:
-    phoebus_dependencies_account: eicuser
