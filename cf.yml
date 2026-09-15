@@ -5,3 +5,4 @@
     - role: org.phoebus.phoebus_dependencies
     - role: org.phoebus.phoebus_services_elasticsearch
     - role: org.phoebus.phoebus_services_cf
+    - role: org.phoebus.phoebus_services_recceiver
