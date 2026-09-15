@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: org.phoebus.phoebus_dependencies
+    - role: nameops
