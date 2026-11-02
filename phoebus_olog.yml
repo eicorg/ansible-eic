@@ -9,5 +9,8 @@
     - role: org.phoebus.phoebus_services_phoebus_olog
   vars:
     phoebus_tools_owner: eicuser
+    phoebus_dependencies_account: eicuser
+    phoebus_services_elasticsearch_account: eicuser
+    phoebus_services_mongodb_account: eicuser
     phoebus_services_phoebus_olog_account: eicuser
     phoebus_services_phoebus_olog_webclient_account: eicuser
