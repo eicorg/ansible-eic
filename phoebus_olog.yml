@@ -13,4 +13,5 @@
     phoebus_services_elasticsearch_account: eicuser
     phoebus_services_mongodb_account: eicuser
     phoebus_services_phoebus_olog_account: eicuser
+    phoebus_services_phoebus_olog_cors_allowed_origins: http://localhost:4000
     phoebus_services_phoebus_olog_webclient_account: eicuser
