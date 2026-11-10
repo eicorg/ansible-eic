@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: org.phoebus.phoebus_dependencies
+    - role: org.phoebus.phoebus_tools
+  vars:
+    phoebus_dependencies_account: eicuser
+    phoebus_tools_owner: eicuser
+    phoebus_tools_install_launcher: true
+    phoebus_tools_install_preferences: true
+    phoebus_tools_preferences_file: "{{ phoebus_resources_config.basedir }}/preferences/pref.ini"
+
